@@ -10,4 +10,4 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./rotative_line:/app
+      - ./provisions_app:/app
