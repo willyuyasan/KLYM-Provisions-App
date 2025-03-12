@@ -20,10 +20,10 @@ FilamentColor::register([
     'danger2' => Color::hex('#b0347f'), //purple
 ]);
 
-class ProvisionSummary extends BaseWidget
+class ProvisionSummary11 extends BaseWidget
 {
-    protected static ?string $heading = 'Total Provision (Productos)';
-    protected static ?int $sort = 3;
+    protected static ?string $heading = 'Total Provision COVAL (Productos)';
+    protected static ?int $sort = 4;
 
     public function table(Table $table): Table
     {
@@ -34,7 +34,7 @@ class ProvisionSummary extends BaseWidget
                     *
                     ,provision/actual_debt as perc_provision
                     "))
-                ->from(DB::raw('
+                ->from(DB::raw("
                         (
                         select
                         product
@@ -43,9 +43,11 @@ class ProvisionSummary extends BaseWidget
                         ,sum(actual_debt) as actual_debt
                         ,sum(provision) as provision
                         from provinvoices
+                        where
+                        curve_segment in ('COVAL')
                         group by
                         product
-                        ) as T'
+                        ) as T"
                         ))
                 ->orderBy('provision','desc') //mandatory for allow laravel to execute the query
             )

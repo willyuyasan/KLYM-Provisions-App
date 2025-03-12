@@ -20,10 +20,10 @@ FilamentColor::register([
     'danger2' => Color::hex('#b0347f'), //purple
 ]);
 
-class ProvisionSummary extends BaseWidget
+class ProvisionSummary21 extends BaseWidget
 {
-    protected static ?string $heading = 'Total Provision (Productos)';
-    protected static ?int $sort = 3;
+    protected static ?string $heading = 'Total Provision COVAL (Altura Mora)';
+    protected static ?int $sort = 6;
 
     public function table(Table $table): Table
     {
@@ -33,26 +33,50 @@ class ProvisionSummary extends BaseWidget
                 ->select(DB::raw("
                     *
                     ,provision/actual_debt as perc_provision
+
+                    ,case
+                        when T.age_range in ('VIGENTE') then 1
+                        when T.age_range in ('1-15') then 2
+                        when T.age_range in ('16-30') then 3
+                        when T.age_range in ('31-60') then 4
+                        when T.age_range in ('61-90') then 5
+                        when T.age_range in ('91-120') then 6
+                        when T.age_range in ('121-180') then 7
+                        when T.age_range in ('180+') then 8
+                    end as tranch_priority
                     "))
-                ->from(DB::raw('
+                ->from(DB::raw("
                         (
                         select
-                        product
+                        age_range
                         ,min(id) as id
                         ,count(*) as invoices
                         ,sum(actual_debt) as actual_debt
                         ,sum(provision) as provision
                         from provinvoices
+                        where
+                        curve_segment in ('COVAL')
                         group by
-                        product
-                        ) as T'
+                        age_range
+                        ) as T"
                         ))
-                ->orderBy('provision','desc') //mandatory for allow laravel to execute the query
+                ->orderBy('tranch_priority')
             )
             ->columns([
                 // ...
-                TextColumn::make('product')
-                    ->grow(false),
+                TextColumn::make('age_range')
+                    ->grow(false)
+                    ->badge()
+                    ->color(fn (string $state): string=>match($state) {
+                        'VIGENTE' => 'success',
+                        '1-15' => 'warning',
+                        '16-30' => 'danger2',
+                        '31-60' => 'danger2',
+                        '61-90' => 'danger2',
+                        '91-120' => 'danger',
+                        '121-180' => 'danger',
+                        '180+' => 'danger',
+                    }),
 
                 TextColumn::make('invoices')
                     ->grow(false)
@@ -60,7 +84,7 @@ class ProvisionSummary extends BaseWidget
                     ->summarize(Sum::make()
                         ->label('') 
                         ->numeric(decimalPlaces: 0)
-                        ),
+                    ),
 
                 TextColumn::make('actual_debt')
                     ->grow(false)
@@ -68,7 +92,7 @@ class ProvisionSummary extends BaseWidget
                     ->summarize(Sum::make()
                         ->label('') 
                         ->numeric(decimalPlaces: 0)
-                        ),
+                    ),
                 
                 TextColumn::make('provision')
                     ->grow(false)
