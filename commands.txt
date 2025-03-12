@@ -6,7 +6,10 @@ git remote add origin https://github.com/willyuyasan/KLYM-Provisions-App.git
 git subtree add --prefix provisions_app https://github.com/willyuyasan/laravel_provisions_app.git main --squash
 
 #Pushing changes to the project child repo
-git subtree push --prefix rotative_line  https://github.com/willyuyasan/rotative_line_v2.git master
+git subtree push --prefix provisions_app  https://github.com/willyuyasan/laravel_provisions_app.git main
+
+#Pulling changes to the project child repo
+git subtree pull --prefix provisions_app  https://github.com/willyuyasan/laravel_provisions_app.git main --squash
 
 
 
