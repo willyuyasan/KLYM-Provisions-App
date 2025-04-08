@@ -10,4 +10,4 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./provisions_app:/app
+      - ./provisions_app:/app:cached

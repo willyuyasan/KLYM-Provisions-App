@@ -4,9 +4,10 @@ RUN apk add --no-cache linux-headers
 RUN apk --no-cache upgrade && \
     apk --no-cache add bash git sudo openssh libxml2-dev oniguruma-dev autoconf gcc g++ make npm freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev ssmtp libssh2 libssh2-dev icu-dev libpq-dev
 
+RUN npm install chokidar
 # PHP: Install php extensions
 RUN pecl channel-update pecl.php.net
-RUN pecl install pcov ssh2 swoole chokidar
+RUN pecl install pcov ssh2 swoole
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install mbstring xml pcntl gd zip sockets pdo  pdo_mysql bcmath soap pgsql pdo_pgsql intl
 RUN docker-php-ext-enable mbstring xml gd zip pcov pcntl sockets bcmath pdo  pdo_mysql soap swoole
