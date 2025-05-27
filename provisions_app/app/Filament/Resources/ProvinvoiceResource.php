@@ -49,46 +49,57 @@ class ProvinvoiceResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('country_code')
+                    ->label('Codigo pais')
                     ->grow(false),
                 
                 TextColumn::make('product')
+                    ->label('Producto')
                     ->grow(false),
                 
-                TextColumn::make('curve_segment')
+                TextColumn::make('funder_group')
+                    ->label('Segmento fondeador')
                     ->grow(false),
                 
                 TextColumn::make('days_rel_due')
+                    ->label('Dias en mora')
                     ->grow(false)
                     ->numeric(decimalPlaces: 0),
                 
                 TextColumn::make('actual_debt')
+                    ->label('Deuda actual')
                     ->grow(false)
                     ->numeric(decimalPlaces: 0),
 
                 TextColumn::make('perc_provision')
+                    ->label('% Provisión')
                     ->grow(false)
                     ->numeric(decimalPlaces: 6),
 
                 TextColumn::make('provision')
+                    ->label('Valor provision')
                     ->grow(false)
                     ->numeric(decimalPlaces: 2),
                 
                 TextColumn::make('provision_obs')
+                    ->label('Observación cálculo provisión')
                     ->grow(false),
                 
                 TextColumn::make('issuer_name')
+                    ->label('Cliente')
                     ->description(fn ($record): string => $record->issuer_tax_number)
                     ->limit(20)
                     ->grow(false)
                     ->searchable(['issuer_name','issuer_tax_number']),
 
                 TextColumn::make('debtor_name')
+                    ->label('Deudor')
                     ->description(fn ($record): string => $record->issuer_tax_number)
                     ->limit(20)
                     ->grow(false)
                     ->searchable(['debtor_name','debtor_tax_number']),
 
                 TextColumn::make('funder_name')
+                    ->label('Fondeador')
                     ->description(fn ($record): string => $record->issuer_tax_number)
                     ->limit(20)
                     ->grow(false)
@@ -100,13 +111,16 @@ class ProvinvoiceResource extends Resource
             ->filters([
                 //
                 SelectFilter::make('country_code')
+                ->label('Código pais')
                 ->options(fn (): array => Provinvoice::query()->pluck('country_code','country_code')->all()),
 
                 SelectFilter::make('product')
+                ->label('Producto')
                 ->options(fn (): array => Provinvoice::query()->pluck('product','product')->all()),
 
-                SelectFilter::make('curve_segment')
-                ->options(fn (): array => Provinvoice::query()->pluck('curve_segment','curve_segment')->all())
+                SelectFilter::make('funder_group')
+                ->label('Segmento fondeador')
+                ->options(fn (): array => Provinvoice::query()->pluck('funder_group','funder_group')->all())
                 ->default(null),
                 
 

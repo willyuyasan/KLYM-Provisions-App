@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use Filament\Tables;
+use App\Traits\Myutils;
 use Filament\Tables\Table;
 use App\Models\Provinvoice;
 use App\Models\ProvTranches;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Filament\Tables\Columns\Summarizers\Summarizer;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 
@@ -23,6 +25,8 @@ FilamentColor::register([
 
 class ProvisionSummary2 extends TableWidget
 {
+    use MyUtils;
+    
     protected static ?string $heading = 'Total Provision (Altura Mora)';
     protected static ?int $sort = 5;
 
@@ -33,6 +37,7 @@ class ProvisionSummary2 extends TableWidget
     public function table(Table $table): Table
     {
         $queryse = $this->get_session_values();
+        $prov_info = $this->provision_info();
         error_log($queryse);
 
         return $table
@@ -55,6 +60,7 @@ class ProvisionSummary2 extends TableWidget
             ->columns([
                 // ...
                 TextColumn::make('age_range')
+                    ->label('Corte de mora')
                     ->grow(false)
                     ->badge()
                     ->color(fn (string $state): string=>match($state) {
@@ -69,6 +75,7 @@ class ProvisionSummary2 extends TableWidget
                     }),
 
                 TextColumn::make('invoices')
+                    ->label('Cantidad de facturas')
                     ->grow(false)
                     ->numeric(decimalPlaces: 0)
                     ->summarize(Sum::make()
@@ -77,6 +84,7 @@ class ProvisionSummary2 extends TableWidget
                     ),
 
                 TextColumn::make('actual_debt')
+                    ->label('Deuda actual')
                     ->grow(false)
                     ->numeric(decimalPlaces: 0)
                     ->summarize(Sum::make()
@@ -85,6 +93,7 @@ class ProvisionSummary2 extends TableWidget
                     ),
                 
                 TextColumn::make('provision')
+                    ->label('Valor provision actual')
                     ->grow(false)
                     ->numeric(decimalPlaces: 0)
                     ->summarize(Sum::make()
@@ -99,7 +108,12 @@ class ProvisionSummary2 extends TableWidget
                         return $pp_ap;
                     })
                     ->grow(false)
-                    ->numeric(decimalPlaces: 2),
+                    ->numeric(decimalPlaces: 2)
+                    ->summarize([
+                        Summarizer::make()
+                            ->using(fn () => $prov_info['pp_ap'].'%')
+                            ->numeric(decimalPlaces: 2),
+                    ]),
                 ]);
     }
 

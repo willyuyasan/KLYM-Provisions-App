@@ -80,6 +80,7 @@ composer require spatie/laravel-permission
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 php artisan optimize:clear
 php artisan migrate
+php artisan migrate --path=/database/migrations/2025_03_11_194825_prov_tranches.php
 
 php artisan make:model Role
 php artisan make:model Permission
@@ -97,7 +98,7 @@ php artisan make:policy PermissionPolicy --model=Permission
 
 # Making the provinvoice model
 php artisan make:model Provinvoice
-php artisan make:filament-resource Provinvoice
+php artisan make:filament-resource Provinvoice --view
 
 php artisan make:model Provcurve
 

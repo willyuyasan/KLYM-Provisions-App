@@ -77,9 +77,11 @@ class ProvisionSummary extends BaseWidget
             ->columns([
                 // ...
                 TextColumn::make('product')
+                    ->label('Producto')
                     ->grow(false),
 
                 TextColumn::make('invoices')
+                    ->label('Cantidad de facturas')
                     ->grow(false)
                     ->numeric(decimalPlaces: 0)
                     ->summarize(Sum::make()
@@ -88,6 +90,7 @@ class ProvisionSummary extends BaseWidget
                         ),
 
                 TextColumn::make('actual_debt')
+                    ->label('Deuda actual')
                     ->grow(false)
                     ->numeric(decimalPlaces: 0)
                     ->summarize(Sum::make()
@@ -96,6 +99,7 @@ class ProvisionSummary extends BaseWidget
                         ),
                 
                 TextColumn::make('provision')
+                    ->label('Valor provisión actual')
                     ->grow(false)
                     ->numeric(decimalPlaces: 0)
                     ->summarize(Sum::make()
@@ -119,14 +123,17 @@ class ProvisionSummary extends BaseWidget
             ])
             ->filters([
                 //
-                SelectFilter::make('country_code')
-                ->options(fn (): array => Provinvoice::query()->pluck('country_code','country_code')->all()),
-
-                SelectFilter::make('curve_segment')
-                ->options(fn (): array => Provinvoice::query()->pluck('curve_segment','curve_segment')->all()),
+                SelectFilter::make('funder_group')
+                ->label('Segmento fondeador')
+                ->options(fn (): array => Provinvoice::query()->pluck('funder_group','funder_group')->all()),
 
                 SelectFilter::make('product')
+                ->label('Producto')
                 ->options(fn (): array => Provinvoice::query()->pluck('product','product')->all()),
+
+                SelectFilter::make('country_code')
+                ->label('Código pais')
+                ->options(fn (): array => Provinvoice::query()->pluck('country_code','country_code')->all()),
             ]);
     }
 
@@ -164,12 +171,12 @@ class ProvisionSummary extends BaseWidget
     public function pass_queryfilters(){
 
         $country_code = $this->table->getLivewire()->tableFilters['country_code']['value'];
-        $curve_segment = $this->table->getLivewire()->tableFilters['curve_segment']['value'];
+        $funder_group = $this->table->getLivewire()->tableFilters['funder_group']['value'];
         $product = $this->table->getLivewire()->tableFilters['product']['value'];
 
         $queryse = '1<2';
         $queryse = $country_code ? "{$queryse} and country_code in ('{$country_code}')" : $queryse;
-        $queryse = $curve_segment ? "{$queryse} and curve_segment in ('{$curve_segment}')" : $queryse;
+        $queryse = $funder_group ? "{$queryse} and funder_group in ('{$funder_group}')" : $queryse;
         $queryse = $product ? "{$queryse} and product in ('{$product}')" : $queryse;
 
         session()->put('queryse', $queryse);

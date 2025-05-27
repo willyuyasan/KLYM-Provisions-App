@@ -19,7 +19,7 @@ return new class extends Migration
         tranches as (
             SELECT
             country_code
-            ,curve_segment
+            ,funder_group
             ,product
             ,age_range
             ,count(*) as invoices
@@ -28,7 +28,7 @@ return new class extends Migration
             from provinvoices
             group by
             country_code
-            ,curve_segment
+            ,funder_group
             ,product
             ,age_range
         )

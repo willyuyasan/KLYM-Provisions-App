@@ -62,24 +62,24 @@ class StatsOverview2 extends BaseWidget
         //$url_provisions_storage = str_replace("http:",'',$url_provisions_storage);
 
         $invoices = Provinvoice::query()->count();
-        $invoices_klym = Provinvoice::query()->where('curve_segment','TOTAL')->count();
-        $invoices_coval = Provinvoice::query()->where('curve_segment', 'COVAL')->count();
+        $invoices_klym = Provinvoice::query()->where('funder_group','KLYM')->count();
+        $invoices_coval = Provinvoice::query()->where('funder_group', 'COVAL')->count();
         
         $pp_invs = number_format(100,0);
         $pp_invs_klym = number_format(($invoices_klym/$invoices)*100,2);
         $pp_invs_coval = number_format(($invoices_coval/$invoices)*100,2);
 
         $provision = Provinvoice::query()->sum('provision');
-        $provision_klym = Provinvoice::query()->where('curve_segment','TOTAL')->sum('provision');
-        $provision_coval = Provinvoice::query()->where('curve_segment', 'COVAL')->sum('provision');
+        $provision_klym = Provinvoice::query()->where('funder_group','KLYM')->sum('provision');
+        $provision_coval = Provinvoice::query()->where('funder_group', 'COVAL')->sum('provision');
 
         $pp_prov = number_format(100,0);
         $pp_prov_klym = number_format(($provision_klym/$provision)*100,2);
         $pp_prov_coval = number_format(($provision_coval/$provision)*100,2);
 
         $debt = Provinvoice::query()->sum('actual_debt');
-        $debt_klym = Provinvoice::query()->where('curve_segment','TOTAL')->sum('actual_debt');
-        $debt_coval = Provinvoice::query()->where('curve_segment', 'COVAL')->sum('actual_debt');
+        $debt_klym = Provinvoice::query()->where('funder_group','KLYM')->sum('actual_debt');
+        $debt_coval = Provinvoice::query()->where('funder_group', 'COVAL')->sum('actual_debt');
 
         $pp_ap = number_format(($provision/$debt)*100,2);
         $pp_ap_klym = number_format(($provision_klym/$debt_klym)*100,2);
